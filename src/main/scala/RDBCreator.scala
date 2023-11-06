@@ -42,14 +42,6 @@ object RDBCreator {
        0x80.toByte :: BigInt(length).toByteArray.toList
   }
 
-  private def bytesToHex(bytes: List[Byte]):String={
-    val sb=new StringBuilder()
-    for(b<-bytes){
-      sb.append(String.format("%02x ",Byte.box(b)))
-    }
-    sb.toString()
-  }
-
   private def createHeader(version: Int, database:Int):List[Byte]={
     val dbCode=List(RDB_OPCODE_SELECTDB, database.toByte)
     val versionText = version.toString.reverse.padTo(4, '0').reverse
@@ -67,8 +59,8 @@ object RDBCreator {
 
   }
 
-  def convertPairs(map:List[(String,String)])=
-    map.toList.flatMap(pair => convertString(pair._1) ++ convertString(pair._2))
+  private def convertPairs(map:List[(String,String)])=
+    map.flatMap(pair => convertString(pair._1) ++ convertString(pair._2))
 
   private  def convertValue(pair: (String, Any)): List[Byte] = {
     val key = convertString(pair._1)
