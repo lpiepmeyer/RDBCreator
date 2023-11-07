@@ -12,7 +12,7 @@ class RDBCreatorTest extends org.scalatest.funsuite.AnyFunSuiteLike {
     assert(actual == expected)
   }
 
-  private def check(key: String, value:Any, expected: List[Byte]) {
+  private def check(key: String, value:Any, expected: List[Byte]): Unit = {
     val out = new ByteArrayOutputStream()
     val rdb = RDBCreator(out)
     rdb.open()
