@@ -7,4 +7,5 @@ lazy val root = (project in file("."))
     name := "rdb-generator"
   )
 
-libraryDependencies += "com.moilioncircle" % "redis-replicator" % "3.5.5" //Thanks for using https://jar-download.com
+libraryDependencies += "com.moilioncircle" % "redis-replicator" % "3.5.5"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % Test
