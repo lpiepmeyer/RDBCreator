@@ -1,5 +1,3 @@
-
-
 import java.io._
 import java.math.BigInteger
 import com.moilioncircle.redis.replicator.util.CRC64
@@ -110,3 +108,4 @@ class RDBCreator private(private val out: OutputStream, private val version: Int
 object RDBCreator {
   def apply(out: OutputStream, version: Int = 7, database: Int = 0) = new RDBCreator(out, version, database)
 }
+
