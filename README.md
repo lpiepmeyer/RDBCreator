@@ -23,7 +23,7 @@ Map(
   "b" -> RedisList("1", "2", "3"),
   "c" -> RedisSet("4", "5", "6"),
   "d" -> RedisHash("x" -> "y", "u" -> "v"),
-  "e" -> RedisZSet( "u" -> 11.0, "u" -> 47.0)
+  "e" -> RedisZSet( "u" -> 11.0, "v" -> 47.0)
 ).foreach { pair =>
   rdb.write(pair._1, pair._2)
 }
