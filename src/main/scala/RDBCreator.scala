@@ -1,16 +1,15 @@
-import java.io._
-import java.math.BigInteger
 import com.moilioncircle.redis.replicator.util.CRC64
 
-import scala.collection.immutable.{Map, Set}
+import java.io._
+import java.math.BigInteger
 
 
 case class RedisHash(pairs:(String, String)*)
 
-case class RedisZSet(values: Map[String, Double])
+case class RedisZSet(pairs: (String, Double)*)
 
-case class RedisSet(values: Set[String])
-case class RedisList(values: List[String])
+case class RedisSet(values: String*)
+case class RedisList(values: String*)
 
 
 
@@ -63,14 +62,14 @@ class RDBCreator private(private val out: OutputStream, private val version: Int
     val pair: List[Byte] = value match {
       case text: String =>
         RDB_TYPE_STRING :: keyBytes ++ convertString(text)
-      case RedisList(list)=>
+      case RedisList(list  @ _*)=>
         RDB_TYPE_LIST :: keyBytes ++ encodeLength(list.size) ++ list.flatMap(convertString)
-      case RedisSet(set) =>
-        RDB_TYPE_SET :: keyBytes ++ encodeLength(set.size) ++ set.toList.flatMap(convertString)
-      case RedisZSet(values) =>
-        RDB_TYPE_ZSET :: keyBytes ++ encodeLength(values.size) ++ convertPairs(values.toList.map(pair => (pair._1, pair._2.toString)))
-      case RedisHash(map @ _*) =>
-        RDB_TYPE_HASH :: keyBytes ++ encodeLength(map.size) ++ convertPairs(map.toList)
+      case RedisSet(values  @ _*) =>
+        RDB_TYPE_SET :: keyBytes ++ encodeLength(values.size) ++ values.flatMap(convertString)
+      case RedisZSet(pairs  @ _*) =>
+        RDB_TYPE_ZSET :: keyBytes ++ encodeLength(pairs.size) ++ convertPairs(pairs.toList.map(pair => (pair._1, pair._2.toString)))
+      case RedisHash(pairs @ _*) =>
+        RDB_TYPE_HASH :: keyBytes ++ encodeLength(pairs.size) ++ convertPairs(pairs.toList)
     }
     updateCRC(pair)
     write(pair)
