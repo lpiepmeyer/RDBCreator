@@ -39,7 +39,7 @@ class RDBCreatorTest extends org.scalatest.funsuite.AnyFunSuiteLike {
 
   test("redis hash") {
     val expected = List[Byte](82, 69, 68, 73, 83, 48, 48, 48, 55, -2, 0, 4, 1, 97, 2, 1, 120, 1, 121, 1, 117, 1, 118, -1, -30, 0, 51, 124, 31, 5, 44, 34)
-    check("a", RedisHash(Map("x" -> "y", "u" -> "v")), expected)
+    check("a", RedisHash("x" -> "y", "u" -> "v"), expected)
   }
 
 

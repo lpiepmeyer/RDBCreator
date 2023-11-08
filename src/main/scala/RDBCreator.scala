@@ -5,7 +5,7 @@ import com.moilioncircle.redis.replicator.util.CRC64
 import scala.collection.immutable.{Map, Set}
 
 
-case class RedisHash(values: Map[String, String])
+case class RedisHash(pairs:(String, String)*)
 
 case class RedisZSet(values: Map[String, Double])
 
@@ -69,7 +69,7 @@ class RDBCreator private(private val out: OutputStream, private val version: Int
         RDB_TYPE_SET :: keyBytes ++ encodeLength(set.size) ++ set.toList.flatMap(convertString)
       case RedisZSet(values) =>
         RDB_TYPE_ZSET :: keyBytes ++ encodeLength(values.size) ++ convertPairs(values.toList.map(pair => (pair._1, pair._2.toString)))
-      case RedisHash(map) =>
+      case RedisHash(map @ _*) =>
         RDB_TYPE_HASH :: keyBytes ++ encodeLength(map.size) ++ convertPairs(map.toList)
     }
     updateCRC(pair)
