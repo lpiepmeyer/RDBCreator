@@ -20,10 +20,10 @@ val rdb = RDBCreator(out)
 rdb.open()
 Map(
   "a" -> "0",
-  "b" -> RedisList(List("1", "2", "3")),
-  "c" -> RedisSet(Set("4", "5", "6")),
-  "d" -> RedisHash(Map("x" -> "y", "u" -> "v")),
-  "e" -> RedisZSet(Map("x" -> 47.0, "u" -> 11.0))
+  "b" -> RedisList("1", "2", "3"),
+  "c" -> RedisSet("4", "5", "6"),
+  "d" -> RedisHash("x" -> "y", "u" -> "v"),
+  "e" -> RedisZSet( "u" -> 11.0, "u" -> 47.0)
 ).foreach { pair =>
   rdb.write(pair._1, pair._2)
 }

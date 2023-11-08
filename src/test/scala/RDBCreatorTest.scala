@@ -1,5 +1,4 @@
 import java.io.ByteArrayOutputStream
-import scala.collection.immutable.{Map, Set}
 
 class RDBCreatorTest extends org.scalatest.funsuite.AnyFunSuiteLike {
   test("empty rdb") {
@@ -35,16 +34,26 @@ class RDBCreatorTest extends org.scalatest.funsuite.AnyFunSuiteLike {
   test("redis set") {
     val expected = List[Byte](82, 69, 68, 73, 83, 48, 48, 48, 55, -2, 0, 2, 1, 97, 3, 1, 52, 1, 53, 1, 54, -1, -26, -39, -123, 21, 81, 36, 75, 40)
     check("a", RedisSet("4", "5", "6"), expected)
+
+    assertThrows[IllegalArgumentException] {
+      check("a", RedisSet("4", "5", "4"), expected)
+    }
   }
 
   test("redis hash") {
     val expected = List[Byte](82, 69, 68, 73, 83, 48, 48, 48, 55, -2, 0, 4, 1, 97, 2, 1, 120, 1, 121, 1, 117, 1, 118, -1, -30, 0, 51, 124, 31, 5, 44, 34)
     check("a", RedisHash("x" -> "y", "u" -> "v"), expected)
+    assertThrows[IllegalArgumentException] {
+      check("a", RedisHash("x" -> "y", "x" -> "v"), expected)
+    }
   }
 
 
   test("redis sorted set") {
     val expected = List[Byte](82, 69, 68, 73, 83, 48, 48, 48, 55, -2, 0, 3, 1, 97, 2, 1, 120, 4, 52, 55, 46, 48, 1, 117, 4, 49, 49, 46, 48, -1, 120, -63, 76, -59, -75, -102, -54, -89)
     check("a", RedisZSet("x" -> 47.0, "u" -> 11.0), expected)
+    assertThrows[IllegalArgumentException] {
+      check("a", RedisZSet("x" -> 47.0, "x" -> 11.0), expected)
+    }
   }
 }

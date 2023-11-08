@@ -4,11 +4,17 @@ import java.io._
 import java.math.BigInteger
 
 
-case class RedisHash(pairs:(String, String)*)
+case class RedisHash(pairs:(String, String)*){
+  require(pairs.map(_._1).distinct.size==pairs.size)
+}
 
-case class RedisZSet(pairs: (String, Double)*)
+case class RedisZSet(pairs: (String, Double)*){
+  require(pairs.map(_._1).distinct.size==pairs.size)
+}
 
-case class RedisSet(values: String*)
+case class RedisSet(values: String*){
+  require(values.distinct.size==values.size)
+}
 case class RedisList(values: String*)
 
 
@@ -62,8 +68,8 @@ class RDBCreator private(private val out: OutputStream, private val version: Int
     val pair: List[Byte] = value match {
       case text: String =>
         RDB_TYPE_STRING :: keyBytes ++ convertString(text)
-      case RedisList(list  @ _*)=>
-        RDB_TYPE_LIST :: keyBytes ++ encodeLength(list.size) ++ list.flatMap(convertString)
+      case RedisList(values  @ _*)=>
+        RDB_TYPE_LIST :: keyBytes ++ encodeLength(values.size) ++ values.flatMap(convertString)
       case RedisSet(values  @ _*) =>
         RDB_TYPE_SET :: keyBytes ++ encodeLength(values.size) ++ values.flatMap(convertString)
       case RedisZSet(pairs  @ _*) =>
